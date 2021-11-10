@@ -11,10 +11,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = (
+    environ.Path(__file__) - 2
+)  # (eaglai-hub/eaglaiHub/settings/base.py - 3 = eaglai-hub/)
+APPS_DIR = ROOT_DIR
 
+env = environ.Env()
+
+READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=True)
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(ROOT_DIR.path(".env")))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,6 +34,8 @@ SECRET_KEY = 'django-insecure-su-1hz5m9!*@bdaa=$l_gir&*g&&wm!g*-dbgvf5$e7$imem=!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+
 
 ALLOWED_HOSTS = []
 
@@ -73,12 +85,20 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+_DATABASE_USER = env("DATABASE_USER")
+_DATABASE_PASS = env("DATABASE_PASSWORD")
+_DATABASE_DB = env("DATABASE_DB")
+_DATABASE_HOST = env("DATABASE_HOST")
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default":
+    env.db(
+        "DATABASE_URL",
+        default=
+        f"postgresql://{_DATABASE_USER}:{_DATABASE_PASS}@{_DATABASE_HOST}:5432/{_DATABASE_DB}",
+    )
 }
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
 # Password validation
