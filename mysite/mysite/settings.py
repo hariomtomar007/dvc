@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'evc'
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,6 @@ DATABASES = {
         f"postgresql://{_DATABASE_USER}:{_DATABASE_PASS}@{_DATABASE_HOST}:5432/{_DATABASE_DB}",
     )
 }
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
 # Password validation

@@ -14,3 +14,7 @@ class Model(models.Model):
     name = models.CharField(max_length=1000, blank=True)
     commit_id = models.CharField(max_length=1000, blank=True)
     project_name = models.CharField(max_length=1000, blank=True)
+
+
+    def __str__(self):
+        return f"{self.name}"
